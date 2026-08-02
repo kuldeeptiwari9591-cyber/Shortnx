@@ -37,7 +37,14 @@ public class RedirectServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String path = req.getRequestURI().substring(req.getContextPath().length());
-        if (path.isEmpty()) path = "/";
+        if (path.isEmpty() || path.equals("/")) {
+            // Forward by path (not by name) so this re-enters the pipeline
+            // as a request for a concrete file. Forwarding "/" to the
+            // default servlet by name asks it to serve a directory, which
+            // does not reliably resolve to index.html.
+            req.getRequestDispatcher("/index.html").forward(req, resp);
+            return;
+        }
 
         if (STATIC_FILES.contains(path) || STATIC_PREFIXES.stream().anyMatch(path::startsWith)) {
             RequestDispatcher dispatcher = req.getServletContext().getNamedDispatcher("default");
