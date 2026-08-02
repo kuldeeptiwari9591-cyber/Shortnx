@@ -89,7 +89,7 @@ public class RedirectServlet extends HttpServlet {
         String ip = req.getRemoteAddr();
         String ua = req.getHeader("User-Agent");
         String referrer = req.getHeader("Referer");
-        Thread.startVirtualThread(() -> {
+        new Thread(() -> {
             String sql = "INSERT INTO clicks (link_id, ip_hash, user_agent, referrer) VALUES (?, ?, ?, ?)";
             try (Connection conn = DBConfig.getConnection();
                  PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -101,7 +101,7 @@ public class RedirectServlet extends HttpServlet {
             } catch (SQLException e) {
                 getServletContext().log("Click log error", e);
             }
-        });
+        }).start();
     }
 
     /** Store a hash instead of the raw IP — enough for abuse detection without keeping PII. */
