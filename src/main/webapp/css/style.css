@@ -1,0 +1,225 @@
+/* ==========================================================================
+   ShortNx design tokens
+   Palette:  --paper (bg), --ink (text), --amber (signal/accent),
+             --teal (secondary accent), --line (hairline borders)
+   Type:     Space Grotesk (display), Inter (body), JetBrains Mono (codes/urls)
+   Concept:  a long URL "compresses" into a short code — the beacon-amber
+             accent marks the compressed/active state throughout.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+    --paper: #EEF1F6;
+    --paper-raised: #FFFFFF;
+    --ink: #14213D;
+    --ink-soft: #4A5578;
+    --amber: #FFB000;
+    --amber-ink: #7A4E00;
+    --teal: #0F5257;
+    --line: #D6DCE8;
+    --danger: #C1432F;
+    --radius: 10px;
+    --shadow: 0 1px 2px rgba(20, 33, 61, 0.06), 0 8px 24px -12px rgba(20, 33, 61, 0.18);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+h1, h2, h3, .display {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 0.4em;
+}
+
+code, .mono, input[type="url"], .short-url {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+a { color: var(--teal); }
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ---- Nav ---- */
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+}
+.nav .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-decoration: none;
+    color: var(--ink);
+}
+.nav .logo span { color: var(--amber-ink); }
+.nav a.navlink {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 24px;
+    font-size: 0.95rem;
+}
+.nav a.navlink:hover { color: var(--ink); }
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+}
+.btn-primary { background: var(--ink); color: var(--paper-raised); }
+.btn-primary:hover { background: #1f2d52; }
+.btn-accent { background: var(--amber); color: var(--ink); }
+.btn-accent:hover { background: #ffc233; }
+.btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+
+/* ---- Hero (home page signature: compression bar) ---- */
+.hero {
+    padding: 80px 0 60px;
+    text-align: left;
+}
+.hero h1 { font-size: 2.6rem; max-width: 14ch; }
+.hero p.lede { color: var(--ink-soft); font-size: 1.15rem; max-width: 46ch; }
+
+.compress-demo {
+    margin-top: 40px;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+}
+.compress-track {
+    position: relative;
+    height: 34px;
+    background: var(--paper);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 14px 0 6px;
+}
+.compress-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--amber);
+    width: 100%;
+    transition: width 0.4s ease;
+}
+.compress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+}
+
+/* ---- Card / form ---- */
+.card {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px;
+    max-width: 520px;
+}
+.field { margin-bottom: 18px; }
+.field label {
+    display: block;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+}
+.field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: var(--paper);
+    color: var(--ink);
+}
+.field input:focus {
+    outline: 2px solid var(--amber);
+    outline-offset: 1px;
+    border-color: var(--amber);
+}
+.field-row { display: flex; gap: 12px; }
+.field-row .field { flex: 1; }
+
+.result-box {
+    margin-top: 20px;
+    padding: 16px;
+    background: #FFF7E6;
+    border: 1px solid var(--amber);
+    border-radius: 8px;
+    display: none;
+}
+.result-box.show { display: block; }
+.result-box .short-url { font-weight: 600; font-size: 1.05rem; }
+
+.error-msg {
+    color: var(--danger);
+    font-size: 0.9rem;
+    margin-top: 8px;
+    display: none;
+}
+.error-msg.show { display: block; }
+
+/* ---- Dashboard table ---- */
+table.links-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+table.links-table th, table.links-table td {
+    text-align: left;
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+}
+table.links-table th { color: var(--ink-soft); font-weight: 500; }
+
+/* ---- 404 ---- */
+.error-page {
+    text-align: center;
+    padding: 120px 0;
+}
+.error-page .code-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 4rem;
+    color: var(--amber-ink);
+    font-weight: 600;
+}
+
+footer {
+    border-top: 1px solid var(--line);
+    padding: 30px 0;
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+    .hero h1 { font-size: 2rem; }
+    .field-row { flex-direction: column; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .compress-bar { transition: none; }
+}

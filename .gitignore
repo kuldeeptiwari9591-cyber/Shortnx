@@ -1,0 +1,19 @@
+# Build output
+target/
+*.war
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+
+# Env/secrets — never commit real DB credentials
+.env
+*.env
+
+# Logs
+*.log

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShortNx — Free URL Shortener & Link Expander</title>
+    <meta name="description" content="Shorten long links into short, shareable URLs in seconds. Track clicks, set custom aliases, and expand any short link back to its original destination — free with ShortNx.">
+    <meta name="keywords" content="url shortener, link shortener, short url, expand url, custom link, link analytics">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://shortnx.app/">
+
+    <!-- Open Graph / social preview -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ShortNx — Free URL Shortener & Link Expander">
+    <meta property="og:description" content="Shorten long links into short, shareable URLs in seconds. Track clicks and manage your links from one dashboard.">
+    <meta property="og:url" content="https://shortnx.app/">
+    <meta property="og:site_name" content="ShortNx">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="ShortNx — Free URL Shortener & Link Expander">
+    <meta name="twitter:description" content="Shorten long links into short, shareable URLs in seconds.">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Structured data — helps search engines understand this is a software tool -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "ShortNx",
+      "url": "https://shortnx.app/",
+      "applicationCategory": "UtilitiesApplication",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Free URL shortener and link expander with click analytics."
+    }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a href="/" class="logo">Short<span>Nx</span></a>
+            <div>
+                <a href="/shorten.html" class="navlink">Shorten a link</a>
+                <a href="/login.html" class="navlink">Log in</a>
+                <a href="/signup.html" class="btn btn-accent">Sign up free</a>
+            </div>
+        </nav>
+
+        <main>
+            <section class="hero">
+                <h1>Long links slow people down.<br>Make yours short.</h1>
+                <p class="lede">
+                    ShortNx turns unwieldy URLs into clean, trackable short links —
+                    and expands any short link back to its original destination,
+                    so nobody clicks blind.
+                </p>
+                <a href="/shorten.html" class="btn btn-primary">Shorten a link — it's free</a>
+
+                <div class="compress-demo" aria-hidden="true">
+                    <div class="compress-label">
+                        <span>https://example.com/products/category/electronics?ref=email&amp;utm_campaign=summer</span>
+                        <span>shortnx.app/aB3xQ9k</span>
+                    </div>
+                    <div class="compress-track">
+                        <div class="compress-bar" style="width: 12%;"></div>
+                    </div>
+                    <div class="compress-label">
+                        <span>78 characters</span>
+                        <span>19 characters</span>
+                    </div>
+                </div>
+            </section>
+
+            <section aria-labelledby="features-heading">
+                <h2 id="features-heading">What you get</h2>
+                <ul>
+                    <li><strong>Custom aliases</strong> — pick your own short code instead of a random one.</li>
+                    <li><strong>Click analytics</strong> — see when and how often a link gets clicked.</li>
+                    <li><strong>Link expiry</strong> — set links to auto-expire on a date you choose.</li>
+                    <li><strong>Dashboard</strong> — manage every link you've created in one place.</li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 ShortNx. Built by Kuldeep.</p>
+        </footer>
+    </div>
+</body>
+</html>

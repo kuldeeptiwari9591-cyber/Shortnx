@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shorten a Link — ShortNx</title>
+    <meta name="description" content="Paste a long URL and get a short, shareable ShortNx link instantly. Add a custom alias if you like.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://shortnx.app/shorten.html">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a href="/" class="logo">Short<span>Nx</span></a>
+            <div>
+                <a href="/dashboard.html" class="navlink">Dashboard</a>
+                <a href="/login.html" class="navlink">Log in</a>
+            </div>
+        </nav>
+
+        <main>
+            <h1 style="margin-top:48px;">Shorten a link</h1>
+            <p class="lede" style="color:var(--ink-soft); max-width:50ch;">
+                Paste any http:// or https:// URL below. Logged-in users can also
+                pick a custom alias and see this link on their dashboard.
+            </p>
+
+            <form id="shortenForm" class="card" style="margin-top:24px;">
+                <input type="hidden" id="csrfToken" name="csrfToken" value="">
+
+                <div class="field">
+                    <label for="url">Long URL</label>
+                    <input type="url" id="url" name="url" placeholder="https://example.com/a/very/long/path" required maxlength="2048">
+                </div>
+
+                <div class="field">
+                    <label for="alias">Custom alias (optional)</label>
+                    <input type="text" id="alias" name="alias" placeholder="my-launch" maxlength="20" pattern="[A-Za-z0-9_-]{3,20}">
+                </div>
+
+                <button type="submit" class="btn btn-accent">Shorten</button>
+                <p class="error-msg" id="errorMsg"></p>
+            </form>
+
+            <div class="result-box" id="resultBox">
+                <div style="font-size:0.85rem; color:var(--ink-soft);">Your short link</div>
+                <div class="short-url" id="shortUrlText"></div>
+                <button class="btn btn-ghost" id="copyBtn" style="margin-top:10px;">Copy</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 ShortNx. Built by Kuldeep.</p>
+        </footer>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Fetch a session-bound CSRF token on load and attach it before submit.
+        fetch('/api/csrf-token').then(r => r.json()).then(d => {
+            document.getElementById('csrfToken').value = d.csrfToken;
+        });
+
+        document.getElementById('shortenForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const errorEl = document.getElementById('errorMsg');
+            const resultEl = document.getElementById('resultBox');
+            errorEl.classList.remove('show');
+            resultEl.classList.remove('show');
+
+            const formData = new FormData(this);
+            try {
+                const res = await fetch('/api/shorten', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    errorEl.textContent = data.error || 'Something went wrong.';
+                    errorEl.classList.add('show');
+                    return;
+                }
+                document.getElementById('shortUrlText').textContent = data.shortUrl;
+                resultEl.classList.add('show');
+            } catch (err) {
+                errorEl.textContent = 'Network error. Please try again.';
+                errorEl.classList.add('show');
+            }
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', function () {
+            navigator.clipboard.writeText(document.getElementById('shortUrlText').textContent);
+            this.textContent = 'Copied!';
+            setTimeout(() => (this.textContent = 'Copy'), 1500);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — ShortNx</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a href="/" class="logo">Short<span>Nx</span></a>
+            <div>
+                <a href="/shorten.html" class="navlink">New link</a>
+                <button id="logoutBtn" class="btn btn-ghost">Log out</button>
+            </div>
+        </nav>
+
+        <main>
+            <h1 style="margin-top:48px;">Your links</h1>
+            <table class="links-table" id="linksTable">
+                <thead>
+                    <tr>
+                        <th>Short code</th>
+                        <th>Destination</th>
+                        <th>Clicks</th>
+                        <th>Created</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="linksBody">
+                    <tr><td colspan="5">Loading…</td></tr>
+                </tbody>
+            </table>
+        </main>
+
+        <footer><p>&copy; 2026 ShortNx.</p></footer>
+    </div>
+
+    <script>
+        async function loadLinks() {
+            const body = document.getElementById('linksBody');
+            try {
+                const res = await fetch('/api/links');
+                if (res.status === 401 || res.redirected) {
+                    window.location.href = '/login.html';
+                    return;
+                }
+                const links = await res.json();
+                if (links.length === 0) {
+                    body.innerHTML = '<tr><td colspan="5">No links yet. <a href="/shorten.html">Create one.</a></td></tr>';
+                    return;
+                }
+                body.innerHTML = links.map(l => `
+                    <tr>
+                        <td class="mono">${escapeHtml(l.shortCode)}</td>
+                        <td>${escapeHtml(truncate(l.longUrl, 50))}</td>
+                        <td>${l.clickCount}</td>
+                        <td>${new Date(l.createdAt).toLocaleDateString()}</td>
+                        <td><button class="btn btn-ghost" onclick="deleteLink(${l.id})">Delete</button></td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                body.innerHTML = '<tr><td colspan="5">Could not load links.</td></tr>';
+            }
+        }
+
+        async function deleteLink(id) {
+            if (!confirm('Delete this link?')) return;
+            await fetch('/api/links?id=' + encodeURIComponent(id), { method: 'DELETE' });
+            loadLinks();
+        }
+
+        // Escaping here matters just as much as on the server: this data
+        // came from the DB and is being written into innerHTML, so a
+        // stored XSS payload in a long_url would execute in the dashboard
+        // of whoever views it if we skipped this step.
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+        function truncate(str, n) {
+            return str.length > n ? str.slice(0, n) + '…' : str;
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/index.html';
+        });
+
+        loadLinks();
+    </script>
+</body>
+</html>
