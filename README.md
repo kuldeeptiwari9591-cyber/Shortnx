@@ -26,6 +26,29 @@ shortnx/
         └── WEB-INF/web.xml
 ```
 
+## Deploying to Render
+
+1. Push this project to a GitHub repo (make sure `deploy_patch.py` has
+   been run — it generates `Dockerfile`, `docker-entrypoint.sh`,
+   `.dockerignore`, and `render.yaml`).
+2. On [render.com](https://render.com) → **New → Web Service** → connect
+   your repo.
+3. Runtime: **Docker** (Render auto-detects the `Dockerfile`).
+4. Under **Environment**, add:
+   - `DB_URL` = `jdbc:postgresql://aws-0-<region>.pooler.supabase.com:6543/postgres`
+   - `DB_USER` = `postgres.<your-project-ref>`
+   - `DB_PASSWORD` = your Supabase DB password
+5. Deploy. Render builds the Docker image (Maven compiles the WAR inside
+   the build stage, no local build needed) and starts the container.
+6. Render assigns a random `PORT` at runtime — `docker-entrypoint.sh`
+   rewrites Tomcat's connector to use it automatically, so you don't
+   need to configure anything for that.
+7. Your live URL will look like `https://shortnx.onrender.com`.
+
+Free-tier Render services spin down after inactivity and take ~30-50s
+to wake on the next request — worth mentioning if a recruiter clicks
+the link cold and it feels slow at first.
+
 ## Setup (Termux)
 
 ```bash

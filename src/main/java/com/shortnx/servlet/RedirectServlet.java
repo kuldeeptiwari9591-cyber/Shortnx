@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,20 +30,34 @@ public class RedirectServlet extends HttpServlet {
             "/css/", "/js/", "/api/", "/images/"
     );
     private static final Set<String> STATIC_FILES = Set.of(
-            "/", "/index.html", "/shorten.html", "/login.html", "/signup.html",
-            "/dashboard.html", "/404.html", "/robots.txt", "/sitemap.xml", "/favicon.ico"
+            "/index.html", "/shorten.html", "/expand.html", "/login.html",
+            "/signup.html", "/dashboard.html", "/404.html",
+            "/robots.txt", "/sitemap.xml", "/favicon.ico"
+    );
+    // Clean, extensionless URLs used by the nav links. Forwarded by path
+    // (not by name) so this re-enters the pipeline as a request for a
+    // concrete file — forwarding to the default servlet by name for a
+    // directory like "/" does not reliably resolve the welcome file.
+    // Anything not listed here and not a static file falls through to
+    // the short-code lookup below.
+    private static final Map<String, String> PAGE_ROUTES = Map.of(
+            "/", "/index.html",
+            "/shorten", "/shorten.html",
+            "/expand", "/expand.html",
+            "/login", "/login.html",
+            "/signup", "/signup.html",
+            "/dashboard", "/dashboard.html"
     );
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String path = req.getRequestURI().substring(req.getContextPath().length());
-        if (path.isEmpty() || path.equals("/")) {
-            // Forward by path (not by name) so this re-enters the pipeline
-            // as a request for a concrete file. Forwarding "/" to the
-            // default servlet by name asks it to serve a directory, which
-            // does not reliably resolve to index.html.
-            req.getRequestDispatcher("/index.html").forward(req, resp);
+        if (path.isEmpty()) path = "/";
+
+        String routedFile = PAGE_ROUTES.get(path);
+        if (routedFile != null) {
+            req.getRequestDispatcher(routedFile).forward(req, resp);
             return;
         }
 
@@ -93,7 +108,7 @@ public class RedirectServlet extends HttpServlet {
 
     /** Fire-and-forget click logging so it never slows down the redirect itself. */
     private void logClickAsync(long linkId, HttpServletRequest req) {
-        String ip = req.getRemoteAddr();
+        String ip = com.shortnx.util.ClientIpUtil.getClientIp(req);
         String ua = req.getHeader("User-Agent");
         String referrer = req.getHeader("Referer");
         new Thread(() -> {

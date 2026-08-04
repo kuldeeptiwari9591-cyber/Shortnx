@@ -11,7 +11,7 @@ document.getElementById('signupForm').addEventListener('submit', async function 
             errorEl.classList.add('show');
             return;
         }
-        window.location.href = '/dashboard.html';
+        window.location.href = '/dashboard';
     } catch (err) {
         errorEl.textContent = 'Network error. Please try again.';
         errorEl.classList.add('show');

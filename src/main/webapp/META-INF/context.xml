@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Tomcat-specific context config. SameSite on session cookies is not
+  configured through web.xml's cookie-config (that element only supports
+  http-only/secure/max-age/domain/path/comment) — it's set here via the
+  CookieProcessor instead.
+-->
+<Context>
+    <CookieProcessor className="org.apache.tomcat.util.http.Rfc6265CookieProcessor"
+                      sameSiteCookies="strict" />
+</Context>

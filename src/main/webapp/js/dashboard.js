@@ -3,7 +3,7 @@ async function loadLinks() {
     try {
         const res = await fetch('/api/links');
         if (res.status === 401 || res.redirected) {
-            window.location.href = '/login.html';
+            window.location.href = '/login';
             return;
         }
         const links = await res.json();
@@ -21,6 +21,8 @@ async function loadLinks() {
             </tr>
         `).join('');
 
+        // CSP blocks inline onclick="..." handlers, so wire delete buttons
+        // up here instead of inline in the generated markup.
         body.querySelectorAll('[data-delete-id]').forEach(btn => {
             btn.addEventListener('click', () => deleteLink(btn.getAttribute('data-delete-id')));
         });
@@ -35,6 +37,10 @@ async function deleteLink(id) {
     loadLinks();
 }
 
+// Escaping here matters just as much as on the server: this data
+// came from the DB and is being written into innerHTML, so a
+// stored XSS payload in a long_url would execute in the dashboard
+// of whoever views it if we skipped this step.
 function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
@@ -46,7 +52,7 @@ function truncate(str, n) {
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {
     await fetch('/api/logout', { method: 'POST' });
-    window.location.href = '/index.html';
+    window.location.href = '/';
 });
 
 loadLinks();

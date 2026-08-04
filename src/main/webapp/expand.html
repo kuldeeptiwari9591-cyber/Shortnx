@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand a Short Link — ShortNx</title>
+    <meta name="description" content="Paste a ShortNx short link or code to see exactly where it leads before you click it.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://shortnx.onrender.com/expand">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a href="/" class="logo">Short<span>Nx</span></a>
+            <div>
+                <a href="/shorten" class="navlink">Shorten</a>
+                <a href="/login" class="navlink">Log in</a>
+            </div>
+        </nav>
+
+        <main>
+            <h1 style="margin-top:48px;">Expand a short link</h1>
+            <p class="lede" style="color:var(--ink-soft); max-width:50ch;">
+                Paste a ShortNx short link or just the code — see the real
+                destination before you visit it.
+            </p>
+
+            <form id="expandForm" class="card" style="margin-top:24px;" method="get" action="/api/expand">
+                <div class="field">
+                    <label for="code">Short link or code</label>
+                    <input type="text" id="code" name="code" placeholder="shortnx.onrender.com/aB3xQ9k or aB3xQ9k" required>
+                </div>
+                <button type="submit" class="btn btn-accent">Expand</button>
+                <p class="error-msg" id="errorMsg"></p>
+            </form>
+
+            <div class="result-box" id="resultBox">
+                <div style="font-size:0.85rem; color:var(--ink-soft);">This link goes to</div>
+                <div class="short-url" id="longUrlText" style="word-break: break-all;"></div>
+                <div id="statusText" style="margin-top:8px; font-size:0.85rem;"></div>
+                <a id="visitLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-ghost" style="margin-top:10px; display:inline-block;">Visit destination</a>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 ShortNx. Built by Kuldeep.</p>
+        </footer>
+    </div>
+
+    <script src="js/expand.js"></script>
+</body>
+</html>

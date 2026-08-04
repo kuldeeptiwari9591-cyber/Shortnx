@@ -20,7 +20,7 @@ public class AuthFilter implements Filter {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect(request.getContextPath() + "/login.html");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         chain.doFilter(req, res);

@@ -23,7 +23,7 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("application/json");
 
-        if (!RateLimiter.allow("login:" + req.getRemoteAddr())) {
+        if (!RateLimiter.allow("login:" + com.shortnx.util.ClientIpUtil.getClientIp(req))) {
             resp.setStatus(429);
             resp.getWriter().write(errorJson("Too many attempts. Try again shortly."));
             return;

@@ -25,7 +25,7 @@ public class SignupServlet extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("application/json");
 
-        if (!RateLimiter.allow("signup:" + req.getRemoteAddr())) {
+        if (!RateLimiter.allow("signup:" + com.shortnx.util.ClientIpUtil.getClientIp(req))) {
             resp.setStatus(429);
             resp.getWriter().write(errorJson("Too many attempts. Try again shortly."));
             return;

@@ -29,7 +29,7 @@ public class ShortenServlet extends HttpServlet {
             return;
         }
 
-        if (!RateLimiter.allow("shorten:" + req.getRemoteAddr())) {
+        if (!RateLimiter.allow("shorten:" + com.shortnx.util.ClientIpUtil.getClientIp(req))) {
             resp.setStatus(429);
             resp.getWriter().write(errorJson("Too many requests. Slow down a little."));
             return;
